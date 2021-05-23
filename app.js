@@ -1,42 +1,48 @@
-const p1button = document.querySelector('#P1');
-const p2button = document.querySelector('#P2');
+//Define variables-------------------------
+const p1 = {
+    score: 0,
+    button: document.querySelector('#P1'),
+    display: document.querySelector('#p1Score')
+}
+
+const p2 = {
+    score: 0,
+    button: document.querySelector('#P2'),
+    display: document.querySelector('#p2Score')
+}
+
 const resetButton = document.querySelector('#Reset');
-const p1ScoreDisplay = document.querySelector('#p1Score');
-const p2ScoreDisplay = document.querySelector('#p2Score');
 const winningScoreSelect = document.querySelector('#scores');
 let winningScore = 5;
 let p1Score = 0;
 let p2Score = 0;
 isGameOver = false;
 
-//Add 1 to player 1 score when button clicked
-p1button.addEventListener('click', function () {
+//Define function---------------------------
+//This is a generic function to minimize the amount of code being written
+//It accepts arguments based on the object for p1 and p2 defined above
+function updateScore(player, opponent) {
     if (!isGameOver) {
-        p1Score++;
-        if (p1Score === winningScore) {
+        player.score++;
+        if (player.score === winningScore) {
             isGameOver = true;
-            p1ScoreDisplay.classList.add('has-text-success');
-            p2ScoreDisplay.classList.add('has-text-danger');
-            p1button.disabled = true;
-            p2button.disabled = true;
+            player.display.classList.add('has-text-success');
+            opponent.display.classList.add('has-text-danger');
+            player.button.disabled = true;
+            opponent.button.disabled = true;
         }
-        p1ScoreDisplay.innerHTML = p1Score;
+        player.display.innerHTML = player.score;
     }
+}
+
+//Add 1 to player 1 score when button clicked
+p1.button.addEventListener('click', function () {
+    updateScore(p1, p2);
 })
 
 //Add 1 to player 2 score when button clicked
-p2button.addEventListener('click', function () {
-    if (!isGameOver) {
-        p2Score++;
-        if (p2Score === winningScore) {
-            isGameOver = true;
-            p2ScoreDisplay.classList.add('has-text-success');
-            p1ScoreDisplay.classList.add('has-text-danger');
-            p1button.disabled = true;
-            p2button.disabled = true;
-        }
-        p2ScoreDisplay.innerHTML = p2Score;
-    }
+p2.button.addEventListener('click', function () {
+    updateScore(p2, p1);
 })
 
 //Selecting the winning score of the game
@@ -48,15 +54,14 @@ winningScoreSelect.addEventListener('change', function () {
 //Reset the scoress
 resetButton.addEventListener('click', reset)
 
-//defining the reset function
+//defining the reset function. Use a loop incase you ever wanted to increase the number of players.
+//That would require a lot of code to reset each variable assigned to each player.
 function reset() {
     isGameOver = false;
-    p1ScoreDisplay.innerHTML = 0;
-    p2ScoreDisplay.innerHTML = 0
-    p1Score = 0;
-    p2Score = 0;
-    p1ScoreDisplay.classList.remove('has-text-success', 'has-text-danger');
-    p2ScoreDisplay.classList.remove('has-text-success', 'has-text-danger');
-    p1button.disabled = false;
-    p2button.disabled = false;
+    for (let p of [p1, p2]) {
+        p.score = 0;
+        p.display.innerHTML = 0;
+        p.display.classList.remove('has-text-success', 'has-text-danger');
+        p.button.disabled = false;
+    }
 }
