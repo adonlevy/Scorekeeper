@@ -1,3 +1,4 @@
+const hello = "hello";
 const p1button = document.querySelector('#P1');
 const p2button = document.querySelector('#P2');
 const resetButton = document.querySelector('#Reset');
